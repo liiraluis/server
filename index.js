@@ -25,9 +25,12 @@ const port = process.env.PORT || 3000;
 
 const server = express();
 
-server.use(json());
-server.use(cors());
 
+server.use(express.json());
+server.use(cors());
+server.use(function(req, res, next){
+    req.headers.password != process.env.PASSWORD ? res.status(401).send('Authorization error') : next() 
+});
 server.post('/upload', upload.single('image'), function(req, res){
     try{
         imageKit.upload({
